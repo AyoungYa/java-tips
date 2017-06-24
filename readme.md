@@ -2,11 +2,11 @@
 该package主要用Java描述设计模式-可服用的面向对象软件元素所介绍的23种设计模式。主要分为以下三大类：
 
 ## 创建型
- + 工厂模式
- + 抽象工厂模式
- + 单例模式
- + 建造者模式
- + 原型模式
++ 工厂模式（Factory Pattern）
++ 抽象工厂模式（Abstract Factory Pattern）
++ 单例模式（Singleton Pattern）
++ 建造者模式（Builder Pattern）
++ 原型模式（Prototype Pattern）
  
 ## 结构型
 这些设计模式关注类和对象的组合。继承的概念被用来组合接口和定义组合对象获得新功能的方式。
