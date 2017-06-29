@@ -1,4 +1,4 @@
-package patterndesign.creational.factory.abstractFactory;
+package patterndesign.creational.factory.factory;
 
 /**
  * <p>Description: </p>
