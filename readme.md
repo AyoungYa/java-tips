@@ -39,3 +39,4 @@
  
  # 参考
  1. [设计模式简介](http://www.runoob.com/design-pattern/design-pattern-intro.html)
+ 2. [动态代理](http://www.cnblogs.com/techyc/p/3455950.html)
