@@ -18,7 +18,7 @@ public class DynamicMain {
 		System.out.println("Start Dynamic proxy");
 		
 		ClassLoader classLoader = player.getClass().getClassLoader();
-		IGamePlayer proxy = (IGamePlayer) Proxy.newProxyInstance(classLoader, new Class[]{IGamePlayer.class}, new DynamicGamePlayerIH(player));
+		IGamePlayer proxy = (IGamePlayer) Proxy.newProxyInstance(classLoader, player.getClass().getInterfaces(), new DynamicGamePlayerIH(player));
 		
 		proxy.login("Lisi", "12333");
 		proxy.killBoss();
