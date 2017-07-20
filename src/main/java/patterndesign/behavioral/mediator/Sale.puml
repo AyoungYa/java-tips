@@ -1,0 +1,77 @@
+@startuml
+class Purchase {
+    void buyIBMcomputer(int number)
+    void refuseBuyIBM()
+}
+
+class Sale{
+    void sellIBMComputer(int number)
+    int getSaleStatus()
+    void offSale()
+}
+
+class Stock{
+    static int COMPUTER_NUMBER = 100
+    void increase(int number)
+    void decrease(int number)
+    int getStockNumber()
+    void clearStock()
+}
+
+abstract class AbstractMediator{
+    Purchase purchase
+    Sale sale
+    Stock stock
+    AbstractMediator()
+    void execute(String str, Object... objects)
+}
+
+class Mediator{
+    void execute(String str, Object... objects)
+}
+
+abstract class AbstractColleague{
+    AbstractMediator mediator
+    AbstractColleague(AbstractMediator mediator)
+}
+
+Mediator --up|> AbstractMediator
+Mediator <-right-- Purchase
+Mediator <-left-- Sale
+Mediator <-up-- Stock
+
+Stock --down|> AbstractColleague
+Purchase --|> AbstractColleague
+Sale --|> AbstractColleague
+
+'Purchase ..right "购管理者"
+'Purchase <--left-> Sale
+'Purchase <---down-> Stock
+'Sale <---down-> Stock
+'Sale ..left "销售管理"
+'Stock ..left "存货管理"
+
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+
+'enum TimeUnit {
+'DAYS
+'HOURS
+'MINUTES
+'}
+
+@enduml
