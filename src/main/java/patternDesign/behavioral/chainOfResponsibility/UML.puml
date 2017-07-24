@@ -1,0 +1,10 @@
+@startuml
+
+abstract class Handler{
+    + handleRequest()
+}
+
+Client --right-> Handler
+Handler --> Handler: + successor
+ConcreteHandler --up-|> Handler
+@enduml
