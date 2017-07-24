@@ -1,0 +1,71 @@
+@startuml
+abstract class Group{
+    void find()
+    void add()
+    void delete()
+    void change()
+    void plan()
+}
+
+class CodeGroup
+class PageGroup
+class RequirementGroup
+
+abstract class Command{
+    CodeGroup codeGroup
+    PageGroup pageGroup
+    RequirementGroup requirementGroup
+
+    void execute()
+}
+
+class DeletePageCommand
+class AddRequirementCommand
+
+Class Invoker{
+    void setCommand(Command command)
+    void action()
+}
+
+class Client
+
+CodeGroup ..up..> Group
+PageGroup ..up..> Group
+RequirementGroup ..up..> Group
+
+CodeGroup <-up--o Command
+PageGroup <-up--o Command
+RequirementGroup <-up--o Command
+
+DeletePageCommand -up--> Command
+Command <|.up...o Invoker
+AddRequirementCommand -up--> Command
+
+Invoker <-left--- Client
+
+
+
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+'
+'enum TimeUnit {
+'DAYS
+'HOURS
+'MINUTES
+'}
+
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+class Client{
+}
+
+class Receiver{
+   +action()
+}
+note left: 命令执行者
+
+class Invoker {
+}
+
+Abstract class Command{
+    + execute()
+}
+note right: 命令的声明
+
+class ConcreteCommand{
+}
+
+Command <-up-- ConcreteCommand
+Invoker o--right-> Command
+ConcreteCommand <-up-- Receiver: + receiver
+Client --down->Receiver
+Client ...right.> ConcreteCommand
+@enduml
