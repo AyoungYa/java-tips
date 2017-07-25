@@ -1,0 +1,14 @@
+@startuml
+
+interface Strategy{
+    +operate()
+}
+
+ConcreteStrategy ..up.|> Strategy
+
+class Context{
+    + contextInterface()
+}
+Context o..right.> Strategy: +strategy
+
+@enduml
