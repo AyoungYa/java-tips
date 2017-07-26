@@ -1,0 +1,18 @@
+@startuml
+
+abstract class Target{
+    + request()
+}
+
+abstract class Adapter
+
+class Adaptee{
+    + specificRequest()
+}
+
+Client --right-> Target
+
+Adapter --up-|> Target
+Adapter --left-|> Adaptee
+
+@enduml
