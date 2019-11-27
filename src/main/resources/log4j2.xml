@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} %t [%p] %c{1} (%F:%L) %msg%n"/>
+        </Console>
+
+        <!--XMDFile异步磁盘日志配置示例-->
+        <!--默认按天&按512M文件大小切分日志，默认最多保留30个日志文件。-->
+        <!--目录为/opt/logs/${appkey} 或 /data/applogs/${appkey}，优先选用磁盘挂载目录-->
+        <!--注意：fileName前会自动增加文件路径，只配置文件名即可-->
+        <!--!!!!!!! 上海同学推荐使用xmd-log4j2 1.3.4 + scribe-log4j2 1.3.1版本，若使用低版本请按如下方式增加xmdFilePath参数 !!!!!!!!-->
+        <XMDFile name="SERVICE-LOG" fileName="request.log" xmdFilePath="/opt/logs" sizeBasedTriggeringSize="1G" rolloverMax="60"></XMDFile>
+
+        <XMDFile name="jmonitorappender" fileName="jmonitor.log" xmdFilePath="/opt/logs" rolloverMax="10"></XMDFile>
+
+        <XMDFile name="jmonitorlogstoreappender" fileName="jmonitorlogstore.log" xmdFilePath="/opt/logs" rolloverMax="10"></XMDFile>
+
+        <XMDFile name="accesskpifile" fileName="access_kpi.log" xmdFilePath="/opt/logs" rolloverMax="10"></XMDFile>
+         
+        <!--可选配置：ERROR日志、WARN日志单独输出到一个文件-->
+        <XMDFile name="ERROR-LOG" fileName="error.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+        </XMDFile>
+
+        <XMDFile name="WARN-LOG" fileName="warn.log">
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </XMDFile>
+         
+        <Scribe name="ScribeAppender">
+            <!-- 远程日志默认使用appkey作为日志名(App.properties文件中的app.name字段)，也可以选择用如下方式自定义scribeCategory。scribeCategory优先级高于appkey-->
+            <Property name="scribeCategory">com.sankuai.zc.open.nebulaserver</Property>
+            <LcLayout/>
+        </Scribe>
+
+        <Async name="ScribeAsyncAppender" blocking="false">
+            <AppenderRef ref="ScribeAppender"/>
+        </Async>
+
+        <!--用于mtrace的scribe Appender-->
+        <Scribe name="remoteErrorLog">
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <LcLayout/>
+        </Scribe>
+
+        <!--异常日志远程上报-->
+        <Async name="AsyncErrorLog" blocking="false">  <!-- 当 blocking 为 false 时，超过最高 qps 时，不阻塞，直接抛弃数据。-->
+            <AppenderRef ref="remoteErrorLog"/>
+        </Async>
+    </appenders>
+
+    <loggers>
+
+        <logger name="jmonitor" includeLocation="true" additivity="false">
+            <appender-ref ref="jmonitorappender"/>
+        </logger>
+
+        <logger name="jmonitorlogstore" includeLocation="true" additivity="false">
+            <appender-ref ref="jmonitorlogstoreappender"/>
+        </logger>
+
+        <logger name="accesskpi" includeLocation="true" additivity="false">
+            <appender-ref ref="accesskpifile"/>
+            <appender-ref ref="AsyncErrorLog"/>
+        </logger>
+
+        <!--Application Logger-->
+        <logger name="com.sankuai.meituan.zcm.open.nebula" level="info" includeLocation="true" additivity="false">
+            <!--TODO SERVICE-LOG先保留-->
+            <appender-ref ref="SERVICE-LOG"/>
+            <appender-ref ref="WARN-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>
+            <appender-ref ref="ScribeAsyncAppender"/>
+        </logger>
+
+        <logger name="logCenter" level="info" includeLocation="true" additivity="false">
+            <appender-ref ref="SERVICE-LOG"/>            <!--若希望日志落地本地文件，需要配置本appender-ref-->
+            <appender-ref ref="ScribeAsyncAppender" />   <!--日志传入远程日志中心 -->
+        </logger>
+
+        <root level="info">
+            <!--Console日志是同步、阻塞的，推荐只在本地调试时使用，线上将该配置去掉-->
+            <!--appender-ref ref="Console" /-->
+            <appender-ref ref="SERVICE-LOG"/>
+            <appender-ref ref="ERROR-LOG"/>                <!--ERROR日志单独输出到一个文件-->
+            <appender-ref ref="WARN-LOG"/>                 <!--ERROR&WARN日志单独输出到一个文件-->
+            <!--<appender-ref ref="ScribeAsyncAppender"/>  -->        <!--日志传入远程日志中心 -->
+        </root>
+    </loggers>
+
+
+</Configuration>

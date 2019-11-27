@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="kmsAuthDataSource" class="com.meituan.service.inf.kms.client.KmsAuthDataSource">
+        <property name="appkey" value="${octo.appkey}" />
+    </bean>
+
+    <bean id="defaultAuthHandler" class="com.meituan.service.mobile.mtthrift.auth.DefaultAuthHandler">
+        <property name="authDataSource" ref="kmsAuthDataSource" />
+    </bean>
+
+    <bean id="iNebulaOrderSearchThrift" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.INebulaOrderSearchThrift"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="nebulaOrderSearchThrift"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="16001"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="nebulaOrderDetailThrift" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.OrderInfoThriftService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="orderInfoThriftService"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="9001"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="poiOrderStatThriftServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.PoiOrderStatThriftService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="poiOrderStatThriftService"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="9002"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="marketWxBillThriftServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.MarketBillThriftService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="marketWxBillThriftServiceImpl"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="9003"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="refundSearchServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.IRefundSearchService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="refundSearchService"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="9004"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="orderSearchServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.IOrderSearchService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="orderSearchService"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="9005"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="posOrderQueryServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.PosOrderQueryService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="posOrderQueryService"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="8901"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+
+    <bean id="boxOrderQueryServicePublisher" class="com.meituan.service.mobile.mtthrift.proxy.ThriftServerPublisher"
+          init-method="publish" destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.client.thirft.core.BoxOrderQueryService"/> <!-- 接口类 -->
+        <property name="serviceImpl" ref="boxOrderQueryServiceImpl"/> <!-- 实现类 -->
+        <property name="selectorThreads" value="4"/>
+        <property name="minWorkerThreads" value="10"/>
+        <property name="port" value="8902"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="shutdownWaitTime" value="10" />
+        <property name="printLog" value="true"/>
+        <property name="authHandler" ref="defaultAuthHandler" />
+    </bean>
+</beans>

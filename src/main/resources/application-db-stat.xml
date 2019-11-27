@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="dataSource" class="com.dianping.zebra.group.jdbc.GroupDataSource" init-method="init" destroy-method="close">
+        <!-- 必配。指定唯一确定数据库的key-->
+        <property name="jdbcRef" value="${jdbcRef.value}" />
+        <!-- 选配。指定底层使用的连接池类型，支持"c3p0","tomcat-jdbc","druid","hikaricp","dbcp2"和"dbcp"，推荐使用"tomcat-jdbc"，默认值为"c3p0" -->
+        <property name="poolType" value="druid" />
+        <!-- 选配。指定连接池的最小连接数，默认值是5。 -->
+        <property name="minPoolSize" value="5" />
+        <!-- 选配。指定连接池的最大连接数，默认值是20。 -->
+        <property name="maxPoolSize" value="50" />
+        <!-- 选配。指定连接池的初始化连接数，默认值是5。 -->
+        <property name="initialPoolSize" value="5" />
+        <!-- 选配。指定连接池的获取连接的超时时间，默认值是1000。 -->
+        <property name="checkoutTimeout" value="200" />
+        <!--懒加载 -->
+        <property name="lazyInit" value="false" />
+        <!--以下配置全部可以选配-->
+        <property name="maxIdleTime" value="1800" />
+        <property name="idleConnectionTestPeriod" value="60" />
+        <property name="acquireRetryAttempts" value="3" />
+        <property name="acquireRetryDelay" value="300" />
+        <property name="maxStatements" value="0" />
+        <property name="maxStatementsPerConnection" value="100" />
+        <property name="numHelperThreads" value="6" />
+        <property name="maxAdministrativeTaskTime" value="5" />
+        <property name="preferredTestQuery" value="SELECT 1" />
+        <property name="extraJdbcUrlParams" value="connectTimeout=1000&amp;socketTimeout=10000&amp;useSSL=false" />
+    </bean>
+
+    <!-- mybatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 映射文件集合 -->
+        <property name="mapperLocations" value="classpath:mapper/poistat/*.xml"/>
+    </bean>
+
+    <bean class="com.dianping.zebra.dao.mybatis.ZebraMapperScannerConfigurer">
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="basePackage" value="com.sankuai.meituan.zcm.open.nebula.server.dao.poistat"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 事务配置 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="transactionTemplate"
+          class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="isolationLevelName" value="ISOLATION_READ_COMMITTED"/>
+    </bean>
+
+    <!--使用注解方式的事务-->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--启用aop注解支持-->
+    <aop:aspectj-autoproxy/>
+
+</beans>
