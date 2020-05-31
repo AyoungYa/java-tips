@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--用户账单及汇总-->
+    <bean id="userShardDataSource" class="com.dianping.zebra.shard.jdbc.ShardDataSource" init-method="init">
+        <!-- 选配。指定底层使用的连接池类型，支持"c3p0","tomcat-jdbc","druid","hikaricp","dbcp2"和"dbcp"，推荐使用"tomcat-jdbc"，默认值为"c3p0" -->
+        <property name="poolType" value="druid" />
+        <!-- 选配。指定连接池的最小连接数，默认值是5。 -->
+        <property name="minPoolSize" value="5" />
+        <!-- 选配。指定连接池的最大连接数，默认值是20。 -->
+        <property name="maxPoolSize" value="20" />
+        <!-- 选配。指定连接池的初始化连接数，默认值是5。 -->
+        <property name="initialPoolSize" value="5" />
+        <!-- 选配。指定连接池的获取连接的超时时间，默认值是1000。 -->
+        <property name="checkoutTimeout" value="200" />
+        <!--ruleName是分库分表的规则名，需要先行配置获取-->
+        <property name="ruleName" value="${userBill.ruleName}"/>
+        <!--业务自行调整并发查询的线程池参数-->
+        <property name="parallelCorePoolSize" value="32"/>
+        <!--业务自行调整并发查询的线程池参数-->
+        <property name="parallelMaxPoolSize" value="64"/>
+        <!--业务自行调整并发查询的线程池参数-->
+        <property name="parallelWorkQueueSize" value="500"/>
+        <!--业务自行调整逻辑SQL在线程池里面的超时时间，可以在beta环境设置的大一点-->
+        <property name="parallelExecuteTimeOut" value="1000"/>
+        <property name="extraJdbcUrlParams" value="connectTimeout=1000&amp;socketTimeout=10000&amp;useSSL=false"/>
+
+        <!--定义所有检测连接有效性的测试所执行的测试语句。Default: null-->
+        <property name="preferredTestQuery" value="SELECT 1" />
+        <!--2.9.11版本新增配置属性：可选-->
+        <!--每30秒运行一次空闲连接回收器 -->
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <!--池中的连接空闲300秒后被回收-->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!--preferredTestQuery执行超时时间，默认0秒，表示不超时-->
+        <property name="validationQueryTimeout" value="1"/>
+        <!--连接泄漏回收参数，300秒，泄露的连接可以被删除的超时值-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--在每次空闲连接回收器线程(如果有)运行时检查的连接数量 默认6-->
+        <property name="numTestsPerEvictionRun" value="6"/>
+
+    </bean>
+
+    <!-- mybatis配置 -->
+    <bean id="shardSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="dataSource" ref="userShardDataSource"/>
+        <!-- 映射文件集合 -->
+        <property name="mapperLocations" value="classpath:mapper/userstat/shard/*.xml"/>
+    </bean>
+    <bean class="com.dianping.zebra.dao.mybatis.ZebraMapperScannerConfigurer">
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="basePackage" value="com.sankuai.meituan.zcm.open.nebula.server.dao.userstat.shard"/>
+        <property name="sqlSessionFactoryBeanName" value="shardSqlSessionFactory"/>
+    </bean>
+    <!-- 事务配置 -->
+    <bean id="shardTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="userShardDataSource"/>
+    </bean>
+    <bean id="shardTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="shardTransactionManager" />
+        <property name="isolationLevelName" value="ISOLATION_READ_COMMITTED"/>
+    </bean>
+
+
+    <!--用户退款账单-->
+    <bean id="userBillRefundGroupDataSource" class="com.dianping.zebra.group.jdbc.GroupDataSource" init-method="init">
+        <property name="jdbcRef" value="${userBillRefund.jdbcRef}"/>
+        <!-- 选配。指定底层使用的连接池类型，支持"c3p0","tomcat-jdbc","druid","hikaricp","dbcp2"和"dbcp"，推荐使用"tomcat-jdbc"，默认值为"c3p0" -->
+        <property name="poolType" value="druid" />
+        <!-- 选配。指定连接池的最小连接数，默认值是5。 -->
+        <property name="minPoolSize" value="5" />
+        <!-- 选配。指定连接池的最大连接数，默认值是20。 -->
+        <property name="maxPoolSize" value="20" />
+        <!-- 选配。指定连接池的初始化连接数，默认值是5。 -->
+        <property name="initialPoolSize" value="10" />
+        <!-- 选配。指定连接池的获取连接的超时时间，默认值是1000。 -->
+        <property name="checkoutTimeout" value="250" />
+        <property name="lazyInit" value="false"/>
+        <property name="extraJdbcUrlParams" value="connectTimeout=1000&amp;socketTimeout=10000&amp;useSSL=false"/>
+
+        <!--定义所有检测连接有效性的测试所执行的测试语句。Default: null-->
+        <property name="preferredTestQuery" value="SELECT 1" />
+        <!--2.9.11版本新增配置属性：可选-->
+        <!--每30秒运行一次空闲连接回收器 -->
+        <property name="timeBetweenEvictionRunsMillis" value="30000"/>
+        <!--池中的连接空闲300秒后被回收-->
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <!--preferredTestQuery执行超时时间，默认0秒，表示不超时-->
+        <property name="validationQueryTimeout" value="1"/>
+        <!--连接泄漏回收参数，300秒，泄露的连接可以被删除的超时值-->
+        <property name="removeAbandonedTimeout" value="300"/>
+        <!--在每次空闲连接回收器线程(如果有)运行时检查的连接数量 默认6-->
+        <property name="numTestsPerEvictionRun" value="6"/>
+
+    </bean>
+
+    <!-- mybatis配置 -->
+    <bean id="userBillRefundGroupSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="dataSource" ref="userBillRefundGroupDataSource"/>
+        <!-- 映射文件集合 -->
+        <property name="mapperLocations" value="classpath:mapper/userstat/unshard/*.xml"/>
+    </bean>
+
+    <bean id="userBillRefundConfig" class="com.dianping.zebra.dao.mybatis.ZebraMapperScannerConfigurer">
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="basePackage" value="com.sankuai.meituan.zcm.open.nebula.server.dao.userstat.unshard"/>
+        <property name="sqlSessionFactoryBeanName" value="userBillRefundGroupSqlSessionFactory"/>
+    </bean>
+
+    <!-- 事务配置 -->
+    <bean id="userBillRefundGroupTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="userBillRefundGroupDataSource"/>
+    </bean>
+
+    <bean id="userBillRefundGroupTransactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="userBillRefundGroupTransactionManager" />
+        <property name="isolationLevelName" value="ISOLATION_READ_COMMITTED"/>
+    </bean>
+</beans>

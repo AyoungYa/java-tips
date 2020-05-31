@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="clientParameters" class="com.taobao.tair3.client.config.impl.ClientParameters">
+        <!-- retryPercent 读操作超时重试比例。20表示最多重试20%的请求，0表示不重试，100表示超时全部重试，默认为20。-->
+        <constructor-arg value="0"/>
+        <!-- batchReturnPercent batchget接口返回成功比例。80表示部分请求超时情况下，80%的key正常拿到结果，就返回，
+               100表示只有全部key拿到结果才返回，否则抛超时异常。默认为100。-->
+        <constructor-arg value="100"/>
+    </bean>
+
+    <bean id="tairConfig" class="com.taobao.tair3.client.config.impl.SimpleTairConfig">
+        <constructor-arg value="${tair.localAppKey}"/>
+        <constructor-arg value="${tair.remoteAppKey}"/>
+        <constructor-arg ref="clientParameters"/>
+    </bean>
+
+    <bean id="tairClient" class="com.taobao.tair3.client.impl.MultiTairClient"
+          init-method="init" scope="singleton"
+          destroy-method="close">
+        <constructor-arg ref="tairConfig"/>
+    </bean>
+</beans>

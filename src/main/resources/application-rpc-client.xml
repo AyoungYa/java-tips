@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+
+    <bean id="iPoiInfoService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="timeout" value="500"/>
+        <property name="retryRequest" value="true"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.baseqrcode"/>
+        <property name="remoteServerPort" value="12102"/>
+        <property name="serviceInterface" value="com.sankuai.meituan.zcm.qrcode.base.thrift.core.PoiInfoService"/>
+    </bean>
+
+
+    <bean id="poiOrderStatService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.datasync.client.thrift.core.PoiOrderStatService"/>
+        <property name="timeout" value="500"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.nebuladatasyncserver"/>
+        <property name="remoteServerPort" value="9002"/>
+        <property name="retryRequest" value="true"/>
+        <property name="enableRemoteDCServer" value="true"/>
+    </bean>
+
+    <bean id="poiOrderStatService2" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.zcm.qrcode.nebula.datasync.client.thrift.core.PoiOrderStatService"/>
+        <property name="timeout" value="500"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="appKey" value="${octo.appkey}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.nebuladatasyncdude"/>
+        <property name="remoteServerPort" value="9002"/>
+        <property name="retryRequest" value="true"/>
+        <property name="enableRemoteDCServer" value="true"/>
+    </bean>
+
+    <bean id="queryOrderService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="timeout" value="5000"/>
+        <property name="retryRequest" value="true"/>
+        <property name="appKey" value="${octo.key}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.qrcodestat"/>
+        <property name="remoteServerPort" value="16000"/>
+        <property name="serviceInterface" value="com.sankuai.meituan.zcm.qrcode.stat.client.thrift.core.IQueryOrderService"/>
+    </bean>
+
+    <bean id="activePoiService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="timeout" value="500"/>
+        <property name="retryRequest" value="true"/>
+        <property name="appKey" value="${octo.key}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.baseqrcode"/>
+        <property name="remoteServerPort" value="6106"/>
+        <property name="serviceInterface" value="com.sankuai.meituan.zcm.qrcode.base.thrift.core.ActivePoiService"/>
+    </bean>
+
+    <!--订单差异收集服务-->
+    <bean id="orderDiffReportService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="timeout" value="250" />
+        <property name="retryRequest" value="true"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="appKey" value="${octo.key}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.baseqrcode"/>
+        <property name="remoteServerPort" value="6105"/>
+        <property name="serviceInterface" value="com.sankuai.meituan.zcm.qrcode.base.thrift.core.OrderDiffReportService" />
+    </bean>
+
+    <!--业务类型映射关系查询服务-->
+    <bean id="bizTypeOriginConfigureService" class="com.meituan.service.mobile.mtthrift.proxy.ThriftClientProxy"
+          destroy-method="destroy">
+        <property name="serviceInterface" value="com.sankuai.meituan.zcm.qrcode.base.thrift.core.BizTypeOriginConfigureService"/>
+        <property name="timeout" value="500"/>
+        <property name="clusterManager" value="OCTO"/>
+        <property name="appKey" value="${octo.key}"/>
+        <property name="remoteAppkey" value="com.sankuai.zc.open.baseqrcode"/>
+        <property name="remoteServerPort" value="6001"/>
+        <property name="retryRequest" value="true"/>
+        <property name="enableRemoteDCServer" value="true"/>
+    </bean>
+
+</beans>

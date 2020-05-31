@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="eagleRestClient" class="com.sankuai.meituan.eagle.restclient.EagleRestClient">
+        <!-- 实际使用过程中, 业务方需要使用自己的appkey 和 accesskey -->
+        <!-- appkey可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="appKey" value="${octo.appkey}" />
+        <!-- accessKey可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="accessKey" value="${eagle.accesskey}" />
+        <!--要访问的集群组名，可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="clusterGroupName" value="${eagle.clustername1}" />
+    </bean>
+
+    <bean id="eagleRestClient2" class="com.sankuai.meituan.eagle.restclient.EagleRestClient">
+        <!-- 实际使用过程中, 业务方需要使用自己的appkey 和 accesskey -->
+        <!-- appkey可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="appKey" value="${octo.appkey}" />
+        <!-- accessKey可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="accessKey" value="${eagle.accesskey}" />
+        <!--要访问的集群组名，可从管理平台菜单中查看：权限中心->Appkey列表，必填-->
+        <property name="clusterGroupName" value="${eagle.clustername2}" />
+    </bean>
+</beans>
