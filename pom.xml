@@ -136,22 +136,22 @@
 
 
         <!-- log4j2 configure -->
-        <dependency>
-            <groupId>com.meituan.inf</groupId>
-            <artifactId>xmd-log4j2</artifactId>
-            <version>1.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.meituan.log</groupId>
-            <artifactId>scribe-log4j2</artifactId>
-            <version>1.3.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.meituan.inf</groupId>-->
+<!--            <artifactId>xmd-log4j2</artifactId>-->
+<!--            <version>1.3.2</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.meituan.log</groupId>-->
+<!--            <artifactId>scribe-log4j2</artifactId>-->
+<!--            <version>1.3.1</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.slf4j</groupId>-->
+<!--                    <artifactId>slf4j-log4j12</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
         <!--如果线上服务已接入scribe-log4j2，请升级到本版本。注意groupId已变更-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
