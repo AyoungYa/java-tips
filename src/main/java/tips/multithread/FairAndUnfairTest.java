@@ -1,4 +1,4 @@
-package JavaTips;
+package tips.multithread;
 
 import java.util.ArrayList;
 import java.util.Collection;

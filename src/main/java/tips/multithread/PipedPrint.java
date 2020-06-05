@@ -1,4 +1,4 @@
-package JavaTips;
+package tips.multithread;
 
 import utils.SleepUtil;
 

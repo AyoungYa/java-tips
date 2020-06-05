@@ -31,7 +31,6 @@ public class PrintTest {
             this.order = order;
         }
 
-        @Override
         public void run() {
             while (true) {
                 if (currentNo.get() % 3 == order) {
